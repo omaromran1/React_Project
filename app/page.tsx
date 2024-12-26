@@ -1,95 +1,66 @@
+"use client";
 import Image from "next/image";
 import styles from "./page.module.css";
+import Header from "@/components/Header";
+import Description from "@/components/Description";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
-export default function Home() {
+function Home() {
+  const [counter, setCounter] = useState<number>(0);
+  const [hide, setHide] = useState<boolean>(true);
+  const [success, setSuccess] = useState<boolean>(false);
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  function handleClick() {
+    setCounter(prevCounter => {
+      const newCounter = prevCounter + 1;
+      if (newCounter === 10) {
+        setSuccess(true);  
+      }
+      return newCounter;
+    });
+  }
+
+  
+  function handleHide() {
+    setHide(!hide);
+  }
+
+  function autoFocus(){
+    inputRef.current?.focus();
+  }
+
+  useEffect(() => {
+    if (success) {
+      console.log("SUCCESS!!");
+    }
+  }, [success]);
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <main>
+      <div className={styles.section}>
+        <Header text="ComPonent" textsub="A computer Engineer" />
+        {hide && <Description />}
+      </div>
+      <Link href="/about">Go to About</Link>
+      <br />
+      <button onClick={handleHide}>
+        {hide ? "Hide Description" : "Show Description"}
+      </button>
+      <br />
+      
+      
+      <div>Show number: {counter}</div>
+      <button onClick={handleClick}>Increment Counter</button>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      
+      <br />
+      <input ref={inputRef} />
+      <br />
+      <button onClick={autoFocus}>FOCUS ME</button>
+    </main>
   );
 }
+
+export default Home;
